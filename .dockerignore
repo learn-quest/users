@@ -1,0 +1,31 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Output of the 'go build' and other Go tools
+/build/
+*.o
+*.a
+
+# Vendor directory if using go mod vendor
+/vendor/
+/tmp/*
+
+# IDE/editor-specific files
+.idea/
+.vscode/
+*.swp
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.cache
+
+
+# Git-specific files
+.DS_Store

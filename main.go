@@ -6,6 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	dbSetup "github.com/learn-quest/users/config"
+	"github.com/learn-quest/users/middlewares"
 )
 
 func main() {
@@ -13,15 +15,18 @@ func main() {
 	environment := os.Getenv("environment")
 	if environment != "" && environment == "production" {
 		// To check if environment present and its production
-		godotenv.Load("./env/production.env")
+		godotenv.Load("./env/.env.production")
 		fmt.Println("Application starting :: mode=" + environment)
 	} else {
 		// for development environment
-		godotenv.Load("./env/development.env")
+		godotenv.Load("./env/.env.development")
 		fmt.Println("Application starting :: mode=development")
 	}
-	r := gin.Default()
-	api := r.Group("/api")
+	session := dbSetup.InitDBConnection()
+
+	// creating parent router
+	router := gin.Default()
+	api := router.Group("/api")
 	{
 		api.GET("/", func(c *gin.Context) {
 			c.JSON(200, gin.H{
@@ -29,6 +34,8 @@ func main() {
 			})
 		})
 	}
+	// injecting session in middlewares
+	api.Use(middlewares.DbSession(session))
 	PORT := os.Getenv("PORT")
-	r.Run(":" + PORT)
+	router.Run(":" + PORT)
 }

@@ -22,12 +22,12 @@ func InitDBConnection() *pgxpool.Pool {
 	// creating a connection pool
 	config, err := pgxpool.ParseConfig(connectionString)
 	if err != nil {
-		fmt.Println("Unable to parse connection string: %v", err)
+		fmt.Printf("Unable to parse connection string: %v\n", err)
 	}
 	// connecting to database
 	session, err := pgxpool.NewWithConfig(context.Background(), config)
 	if err != nil {
-		fmt.Println("Unable to create connection pool: %v", err)
+		fmt.Printf("Unable to create connection pool: %v\n", err)
 		panic(err)
 	}
 
@@ -35,7 +35,7 @@ func InitDBConnection() *pgxpool.Pool {
 	var greeting string
 	err = session.QueryRow(context.Background(), "SELECT 'Hello, PostgreSQL!'").Scan(&greeting)
 	if err != nil {
-		fmt.Println("Query failed: %v", err)
+		fmt.Printf("Query failed: %v\n", err)
 		panic(err)
 	}
 	fmt.Println("Connected to PostgreSQL!")

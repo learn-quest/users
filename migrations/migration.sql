@@ -74,24 +74,6 @@ CREATE TABLE public.users (
 );
 ALTER TABLE public.users OWNER TO postgres;
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.users (
-    _id,
-    name,
-    email,
-    username,
-    password,
-    is_banned,
-    profile_pic,
-    country,
-    last_logged_in,
-    created_at,
-    updated_at
-)
-FROM stdin;
-\.--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -100,10 +82,15 @@ ADD CONSTRAINT users_pkey PRIMARY KEY (_id);
 -- Distribute the table by hashing on 'shard_key_column'
 SELECT create_distributed_table('users', '_id');
 --
+-- Name: users_email_hash_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX users_email_hash_index ON public.users USING hash (email);
+--
 -- Name: users_username_hash_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX users_username_hash_index ON public.users USING hash (username);
 --
 -- PostgreSQL database dump complete
-- -
+--

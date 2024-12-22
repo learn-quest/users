@@ -30,9 +30,6 @@ func InitDBConnection() *pgxpool.Pool {
 		fmt.Println("Unable to create connection pool: %v", err)
 		panic(err)
 	}
-	defer session.Close()
-
-	fmt.Println("Connected to PostgreSQL!")
 
 	// testing the connection with greeting query
 	var greeting string
@@ -41,6 +38,7 @@ func InitDBConnection() *pgxpool.Pool {
 		fmt.Println("Query failed: %v", err)
 		panic(err)
 	}
-	fmt.Println(greeting)
+	fmt.Println("Connected to PostgreSQL!")
+
 	return session
 }

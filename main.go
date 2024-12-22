@@ -8,6 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	dbSetup "github.com/learn-quest/users/config"
 	"github.com/learn-quest/users/middlewares"
+	"github.com/learn-quest/users/routes"
 )
 
 func main() {
@@ -23,19 +24,21 @@ func main() {
 		fmt.Println("Application starting :: mode=development")
 	}
 	session := dbSetup.InitDBConnection()
+	defer session.Close()
 
 	// creating parent router
 	router := gin.Default()
 	api := router.Group("/api")
 	{
+		// injecting session in middlewares
+		api.Use(middlewares.DbSession(session))
 		api.GET("/", func(c *gin.Context) {
 			c.JSON(200, gin.H{
 				"message": "Hello from learn quest users service",
 			})
 		})
+		routes.MainRouter(api)
 	}
-	// injecting session in middlewares
-	api.Use(middlewares.DbSession(session))
 	PORT := os.Getenv("PORT")
 	router.Run(":" + PORT)
 }
